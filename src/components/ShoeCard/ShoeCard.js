@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
-import { COLORS, WEIGHTS } from '../../constants';
-import { formatPrice, pluralize, isNewShoe } from '../../utils';
-import Spacer from '../Spacer';
+import { COLORS, WEIGHTS } from "../../constants";
+import { formatPrice, pluralize, isNewShoe } from "../../utils";
+import Spacer from "../Spacer";
 
 const ShoeCard = ({
   slug,
@@ -36,35 +36,82 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant !== "default" && (
+            <Shoetag variant={variant}>
+              {variant === "on-sale"
+                ? "Sale!"
+                : variant === "new-release"
+                ? "Just released!"
+                : ""}
+            </Shoetag>
+          )}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price onSale={variant === "on-sale"}>{formatPrice(price)}</Price>
         </Row>
         <Row>
-          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
+          {variant === "on-sale" && (
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          )}
         </Row>
       </Wrapper>
     </Link>
   );
 };
 
+const Shoetag = styled.div`
+  background-color: ${(props) =>
+    props.variant === "on-sale" ? COLORS.primary : COLORS.secondary};
+  color: white;
+  width: fit-content;
+  padding: 7px 9px 9px 11px;
+  border-radius: 2px;
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  font-weight: 700;
+  font-size: 1rem;
+`;
+
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
 `;
 
-const Wrapper = styled.article``;
-
-const ImageWrapper = styled.div`
+const Wrapper = styled.article`
+  flex: 1 1 340px;
+  border-radius: 16px;
   position: relative;
 `;
 
-const Image = styled.img``;
+// I'll note that Josh preferred to put this max-width in a new ShoeWrapper
+// property that he added to shoeGrid. That makes it easier to reuse this
+// card elsewhere.
+
+// Either way, though, adding the width to the Wrapper and then making the
+// image just 100% is a common pattern
+const ImageWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  background-color: ${COLORS.gray[100]};
+  height: 312px;
+  max-width: 340px;
+`;
+
+const Image = styled.img`
+  width: 100%;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +119,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  color: ${(props) => (props.onSale ? COLORS.gray[500] : COLORS.gray[900])};
+  text-decoration: ${(props) => (props.onSale ? "line-through" : "inherit")};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
