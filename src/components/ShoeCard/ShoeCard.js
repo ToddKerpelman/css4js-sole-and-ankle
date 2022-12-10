@@ -73,7 +73,7 @@ const Shoetag = styled.div`
   top: 12px;
   right: -4px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: ${14 / 16}rem;
 `;
 
 const Link = styled.a`
@@ -82,14 +82,9 @@ const Link = styled.a`
 `;
 
 const Wrapper = styled.article`
-  flex: 1 1 340px;
   border-radius: 16px;
   position: relative;
 `;
-
-// I'll note that Josh preferred to put this max-width in a new ShoeWrapper
-// property that he added to shoeGrid. That makes it easier to reuse this
-// card elsewhere.
 
 // Either way, though, adding the width to the Wrapper and then making the
 // image just 100% is a common pattern
@@ -99,8 +94,7 @@ const ImageWrapper = styled.div`
   align-items: center;
   border-radius: 16px;
   background-color: ${COLORS.gray[100]};
-  height: 312px;
-  max-width: 340px;
+  max-width: 400px;
 `;
 
 const Image = styled.img`
